@@ -3,8 +3,6 @@ import psycopg2
 import unicodedata
 import re
 
-
-
 # -------------------------
 # Config
 # -------------------------
@@ -23,7 +21,6 @@ def matches_street_number(dpe_address, numero_de_voie):
     """
     Check if dpe_address starts with the street number followed by a space
     """
-    # Escape possible regex characters in numero_de_voie
     numero_de_voie_escaped = re.escape(numero_de_voie)
     pattern = f"^{numero_de_voie_escaped}(\\s|$)"
     return re.match(pattern, dpe_address) is not None
@@ -88,6 +85,7 @@ print(f"Loaded {len(dpe_rows)} DPE rows into memory.")
 # -------------------------
 total_matches = 0
 lines_processed = 0
+written_set = set()  # To track duplicates
 
 with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1) as csvfile:
     fieldnames = [
@@ -117,11 +115,17 @@ with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1
             lines_processed += 1
             matched = None
 
-            # Lookup DPE rows by postcode
             for dpe in dpe_index.get(code_postal, []):
                 if matches_street_number(dpe['adresse_clean'], numero_de_voie) and nom_de_voie.lower() in dpe['adresse_clean']:
-                    matched = dpe
-                    break
+                    # Create a unique key for DVF + DPE combination
+                    unique_key = (
+                        code_postal, numero_de_voie, nom_de_voie.lower(),
+                        dpe['numero_dpe']
+                    )
+                    if unique_key not in written_set:
+                        written_set.add(unique_key)
+                        matched = dpe
+                        break
 
             if matched:
                 total_matches += 1
