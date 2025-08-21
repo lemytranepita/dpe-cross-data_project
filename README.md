@@ -12,6 +12,8 @@ You will also need about 400GB of available space on your hard drive to be able 
 
 You can delete the dump as well as its decompressed version afterwards, thus needing only about 200GB.
 
+We suppose PostgreSQL is running on the same machine as the main program, using localhost port 5432 and user 'postgres'.
+
 ## Commands
 
 ### DPE source aquisition
