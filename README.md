@@ -1,14 +1,8 @@
-# Steps to launch the virtual environment:
-1) Create a new virtual environment with Python 3.8.5
-`python -m venv venv`
-2) Activate the virtual environment
-`source venv/bin/activate`
-3) Upgrade pip and install Jupyter
-`python -m pip install --upgrade pip`
-`python -m pip install notebook`
-4) Start Jupyter Notebook
-`jupyter notebook`
+# DPE Cross Data Project
 
+## Summary
+
+This project aims at unifying DPE (Diagnostic de Performance Energetique) and DVF (Demande de Valeur Fonciere) in order to provide data about how DPE influences the real estate prices.
 
 ## Prerequisites
 
@@ -46,3 +40,15 @@ make
 ```
 
 ### Other...
+
+
+# Steps to launch the virtual environment:
+1) Create a new virtual environment with Python 3.8.5
+`python -m venv venv`
+2) Activate the virtual environment
+`source venv/bin/activate`
+3) Upgrade pip and install Jupyter
+`python -m pip install --upgrade pip`
+`python -m pip install notebook`
+4) Start Jupyter Notebook
+`jupyter notebook`
