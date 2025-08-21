@@ -41,6 +41,12 @@ make install
 make
 ```
 
+### Clean virtual environment files
+
+```sh
+make clean
+```
+
 ### Other...
 
 

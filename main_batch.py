@@ -1,7 +1,8 @@
 import csv
 import psycopg2
+import unicodedata
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 500
 
 # Connect to Postgres
 conn = psycopg2.connect(
@@ -13,16 +14,20 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
+
+def remove_accents(s):
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', s)
+        if unicodedata.category(c) != 'Mn'
+    )
+
 def format_postcode(code_postal):
     return code_postal.zfill(5)
-
-# This will store all matched rows
-all_matches = []
 
 # -------------------------
 # Function to execute batch
 # -------------------------
-def execute_batch(cur, batch, total_matches_so_far, lines_processed):
+def execute_batch(cur, batch, total_matches_so_far, lines_processed, writer):
     # Build parameterized query with multiple OR conditions
     sql_conditions = []
     params = []
@@ -60,7 +65,11 @@ def execute_batch(cur, batch, total_matches_so_far, lines_processed):
         matched = None
         for row in results:
             numero_dpe, date_etablissement_dpe, adresse_complete, code_postal, ville, score_dpe, score_ges = row
-            if code_postal == entry['code_postal'] and adresse_complete.startswith(entry['numero_de_voie']):
+            if (
+                code_postal == entry['code_postal'] and 
+                remove_accents(adresse_complete.lower()).startswith(entry['numero_de_voie'].lower()) and
+                remove_accents(entry['nom_de_voie'].lower()) in remove_accents(adresse_complete.lower())
+            ):
                 matched = row
                 break
 
@@ -72,8 +81,7 @@ def execute_batch(cur, batch, total_matches_so_far, lines_processed):
             numero_dpe, date_etablissement_dpe, adresse_complete, code_postal, ville, score_dpe, score_ges = matched
             print("DPE=", numero_dpe, date_etablissement_dpe, adresse_complete, code_postal, ville, score_dpe, score_ges)
 
-            # Append to all_matches
-            all_matches.append({
+            row_dict = {
                 'DVF_code_postal': entry['code_postal'],
                 'DVF_ville': entry['ville'],
                 'DVF_code_departement': entry['code_departement'],
@@ -88,66 +96,70 @@ def execute_batch(cur, batch, total_matches_so_far, lines_processed):
                 'DPE_ville': ville,
                 'DPE_score_dpe': score_dpe,
                 'DPE_score_ges': score_ges
-            })
+            }
+
+            # Write immediately to CSV
+            writer.writerow(row_dict)
+            csvfile.flush()  # <-- Force flush to disk
 
     print(f"Processed {lines_processed} lines from DVF so far.")
     return total_matches_so_far
 
 
 # -------------------------
-# Read CSV and prepare batches
+# Main program
 # -------------------------
 i = 0
 batch = []
 lines_processed = 0
 
-with open('DVF_maison_vente.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile, delimiter=';')
-    
-    for row in reader:
-        if row['B/T/Q']:
-            continue
+with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1) as csvfile:
+    fieldnames = [
+        'DVF_code_postal', 'DVF_ville', 'DVF_code_departement',
+        'DVF_numero_de_voie', 'DVF_type_de_voie', 'DVF_nom_de_voie', 'DVF_valeur_fonciere',
+        'DPE_numero_dpe', 'DPE_date_etablissement_dpe', 'DPE_adresse_complete',
+        'DPE_code_postal', 'DPE_ville', 'DPE_score_dpe', 'DPE_score_ges'
+    ]
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
 
-        code_postal = format_postcode(row['Code postal'])
-        numero_de_voie = row['No voie']
-        nom_de_voie = row['Voie'].replace("'", "")
-        ville = row['Commune']
-        code_departement = row['Code departement']
-        type_de_voie = row['Type de voie']
-        valeur_fonciere = row['Valeur fonciere']
+    with open('DVF_maison_vente.csv', newline='') as infile:
+        reader = csv.DictReader(infile, delimiter=';')
 
-        batch.append({
-            'code_postal': code_postal,
-            'numero_de_voie': numero_de_voie,
-            'nom_de_voie': nom_de_voie,
-            'ville': ville,
-            'code_departement': code_departement,
-            'type_de_voie': type_de_voie,
-            'valeur_fonciere': valeur_fonciere
-        })
+        for row in reader:
+            if row['B/T/Q']:
+                continue
 
-        lines_processed += 1  # Count every row processed
+            code_postal = format_postcode(row['Code postal'])
+            numero_de_voie = row['No voie']
+            nom_de_voie = remove_accents(row['Voie'].replace("'", ""))
+            ville = row['Commune']
+            code_departement = row['Code departement']
+            type_de_voie = row['Type de voie']
+            valeur_fonciere = row['Valeur fonciere']
 
-        if len(batch) >= BATCH_SIZE:
-            i = execute_batch(cur, batch, i, lines_processed)
-            batch = []
+            batch.append({
+                'code_postal': code_postal,
+                'numero_de_voie': numero_de_voie,
+                'nom_de_voie': nom_de_voie,
+                'ville': ville,
+                'code_departement': code_departement,
+                'type_de_voie': type_de_voie,
+                'valeur_fonciere': valeur_fonciere
+            })
 
-    # Execute remaining rows if i < 100
-    if batch:
-        i = execute_batch(cur, batch, i, lines_processed)
+            lines_processed += 1
+
+            if len(batch) >= BATCH_SIZE:
+                i = execute_batch(cur, batch, i, lines_processed, writer)
+                batch = []
+
+        # Remaining rows
+        if batch:
+            i = execute_batch(cur, batch, i, lines_processed, writer)
 
 cur.close()
 conn.close()
 
-# -------------------------
-# Write all matches to CSV
-# -------------------------
-with open('DVF_DPE_matches.csv', 'w', newline='', encoding='utf-8') as csvfile:
-    fieldnames = list(all_matches[0].keys()) if all_matches else []
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(all_matches)
-
-print(f"Saved {len(all_matches)} matches to DVF_DPE_matches2.csv")
 print(f"Total matches found: {i}")
 print(f"Total DVF lines processed: {lines_processed}")

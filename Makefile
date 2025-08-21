@@ -1,7 +1,8 @@
 all:
 	( \
 	. venv/bin/activate; 					\
-	python main_batch.py;				\
+	python main_batch.py;					\
+	deactivate;								\
 	)
 
 install:
@@ -9,5 +10,9 @@ install:
 	python -m venv venv; 					\
 	. venv/bin/activate; 					\
 	python -m pip install --upgrade pip;	\
-	pip install psycopg2;				\
+	pip install psycopg2;					\
+	deactivate;								\
 	)
+
+clean:
+	rm -rf venv
