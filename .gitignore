@@ -16,3 +16,12 @@ ipython_config.py
 #   git rm -r .ipynb_checkpoints/
 
 venv/
+
+.~lock.projet_dpe.odt#
+
+ressources/dpe/*
+ressources/dvf/*
+nettoyage/*
+
+projet_dpe.odt
+rattrapage\ PFE\ -\ DEV&experts.pdf
