@@ -103,7 +103,6 @@ TYPE_VOIE_ABBR_OFFICIAL = {
     "TERR": "TERRASSE",
     "TOUR": "TOUR",
     "TRAV": "TRAVERSE",
-    "VAL": "VAL",
     "VALL": "VALLEE",
     "VEN": "VENELLE",
     "VLA": "VILLA",
@@ -111,7 +110,7 @@ TYPE_VOIE_ABBR_OFFICIAL = {
     "VC": "VOIE COMMUNALE",
     "ZA": "ZONE ARTISANALE",
     "ZI": "ZONE INDUSTRIELLE",
-    "VCHE" : "VIEUX CHEMIN"
+    "VCHE" : "VIEUX CHEMIN",
 }
 
 TYPES_VOIE = sorted([
@@ -136,12 +135,16 @@ TYPE_VOIE_ABBR_ALIASES = {
     "SEN": "SENT",      # SENTIER
     "PTE": "PRTE",      # PORTE (PTE très courant)
     "VIL": "VLA",       # VILLA (souvent tronqué en VIL)
-    "VC.": "VC", "AV.": "AV", "BD.": "BD",  # avec point
+    "VC.": "VC",
+    "AV.": "AV",
+    "BD.": "BD",  # avec point
     "ETANG": "ETG",     # quand l’abréviation est remplacée par le mot sans accents
     "ECLUSE": "ECL",
     "METRO": "METR",
     "RESIDENCE": "RES",
     "RONDPOINT": "RDPT",
+    "MTE" : "MTN",
+    "PLE" : "PL",
     # Ambiguïtés qu’on préfère NE PAS corriger automatiquement :
     # "GR" : peut vouloir dire GARE, GRANGE (GRGE), GRANDE RUE (GDR)…
     # "PCH": non officiel dans la liste (parfois "PORCHE", non présent dans l’annexe)

@@ -40,8 +40,8 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
         (df["valeur_fonciere"] >= 10000) &
         (df["type_local"].isin(["Maison"])) &
         (df["surface_reelle_bati"] >= 9) &
-        (df["nombre_pieces_principales"].between(1, 8)) &
-        (df["code_postal"].str.match(r"^91\d{3}$", na=False))
+        (df["nombre_pieces_principales"].between(1, 8)) # &
+        # (df["code_postal"].str.match(r"^91\d{3}$", na=False))
     ].copy()
     
     # Remplissage des zéros pour code département et code commune
@@ -60,9 +60,6 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
         .str.replace("-", " ", regex=False)
         .str.replace("'", " ", regex=False)
     )
-    
-    # Détection et correction quand "voie" commence par un type de voie étendu
-    df_filtre = df_filtre.apply(detect_type_in_voie, axis=1)
 
     # Limiter à max_rows lignes
     df_filtre = df_filtre.head(max_rows)
@@ -74,6 +71,6 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
 # Exemple d'utilisation
 chemin_dvf = "ressources/dvf/"
 chemin_sauvegarde = "nettoyage/"
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2023.csv", chemin_sauvegarde + "dvf_filtre_91_2023.csv", 1000000)
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2022.csv", chemin_sauvegarde + "dvf_filtre_91_2022.csv", 1000000)
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2024.csv", chemin_sauvegarde + "dvf_filtre_91_2024.csv", 1000000)
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2023.csv", chemin_sauvegarde + "dvf_filtre_2023.csv", 1000000)
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2022.csv", chemin_sauvegarde + "dvf_filtre_2022.csv", 1000000)
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2024.csv", chemin_sauvegarde + "dvf_filtre_2024.csv", 1000000)
