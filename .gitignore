@@ -25,3 +25,5 @@ nettoyage/*
 
 projet_dpe.odt
 rattrapage\ PFE\ -\ DEV&experts.pdf
+
+__pycache__/
