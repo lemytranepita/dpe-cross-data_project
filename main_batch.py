@@ -34,7 +34,8 @@ def format_postcode(code_postal):
 conn = psycopg2.connect(
     dbname="dpe",
     user="postgres",
-    password="your_password",
+    password="password",
+    #host="192.168.0.100",
     host="localhost",
     port="5432"
 )
@@ -92,7 +93,7 @@ with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1
         'DVF_code_postal', 'DVF_ville', 'DVF_code_departement',
         'DVF_numero_de_voie', 'DVF_type_de_voie', 'DVF_nom_de_voie', 'DVF_valeur_fonciere',
         'DPE_numero_dpe', 'DPE_date_etablissement_dpe', 'DPE_adresse_complete',
-        'DPE_code_postal', 'DPE_ville', 'DPE_score_dpe', 'DPE_score_ges'
+        'DPE_code_postal', 'DPE_ville', 'DPE_score_dpe'
     ]
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -142,8 +143,7 @@ with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1
                     'DPE_adresse_complete': matched['adresse_complete'],
                     'DPE_code_postal': matched['code_postal'],
                     'DPE_ville': matched['ville'],
-                    'DPE_score_dpe': matched['score_dpe'],
-                    'DPE_score_ges': matched['score_ges']
+                    'DPE_score_dpe': matched['score_dpe']
                 }
                 writer.writerow(row_dict)
 
