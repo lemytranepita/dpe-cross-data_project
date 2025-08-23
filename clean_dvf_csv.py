@@ -12,10 +12,12 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
         "Valeur fonciere": "valeur_fonciere",
         "Code postal": "code_postal",
         "Commune": "commune",
-        "Code departement": "code_departement",
         "Type local": "type_local",
         "Surface reelle bati": "surface_reelle_bati",
-        "Nombre pieces principales": "nombre_pieces_principales"
+        "Nombre pieces principales": "nombre_pieces_principales",
+        "No voie": "numero_voie",
+        "Type de voie": "type_voie",
+        "Voie" : "voie"
     }
     df = df.rename(columns=mapping)
     
@@ -37,16 +39,19 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
         (df["type_local"].isin(["Maison"])) &
         (df["surface_reelle_bati"] >= 9) &
         (df["nombre_pieces_principales"].between(1, 8)) &
-        (df["code_postal"].str.startswith("91", na=False))
+        (df["code_postal"].str.match(r"^91\d{3}$", na=False))
     ]
     
     # Limiter à 10 000 lignes
     df_filtre = df_filtre.head(max_rows)
     
-    # Sauvegarde en CSV avec séparateur ";"
-    df_filtre.to_csv(output_file, index=False, sep=";")
+    # Sauvegarde en CSV avec séparateur ","
+    df_filtre.to_csv(output_file, index=False, sep=",")
     print(f"✅ Fichier nettoyé sauvegardé : {output_file} ({len(df_filtre)} lignes)")
 
 # Exemple d'utilisation
 chemin_dvf = "ressources/dvf/"
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2023.csv", "dvf_filtre_91.csv")
+chemin_sauvegarde = "nettoyage/"
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2023.csv", chemin_sauvegarde + "dvf_filtre_91_2023.csv", 1000000)
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2022.csv", chemin_sauvegarde + "dvf_filtre_91_2022.csv", 1000000)
+nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2024.csv", chemin_sauvegarde + "dvf_filtre_91_2024.csv", 1000000)
