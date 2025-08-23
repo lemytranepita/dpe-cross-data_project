@@ -34,8 +34,9 @@ def format_postcode(code_postal):
 conn = psycopg2.connect(
     dbname="dpe",
     user="postgres",
-    password="your_password",
-    host="localhost",
+    password="password",
+    #host="192.168.0.100",
+    host="localhost"
     port="5432"
 )
 cur = conn.cursor()
@@ -135,7 +136,7 @@ with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1
                     'DVF_code_departement': code_departement,
                     'DVF_numero_de_voie': numero_de_voie,
                     'DVF_type_de_voie': type_de_voie,
-                    'DVF_nom_de_voie': noim_de_voie,
+                    'DVF_nom_de_voie': nom_de_voie,
                     'DVF_valeur_fonciere': valeur_fonciere,
                     'DPE_numero_dpe': matched['numero_dpe'],
                     'DPE_date_etablissement_dpe': matched['date_etablissement_dpe'],
