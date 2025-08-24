@@ -1,7 +1,3 @@
-# numero_voie_ban	nom_rue_ban	nom_commune_ban	code_postal_ban	numero_dpe	date_etablissement_dpe	numero_dpe_remplace	modele_dpe	methode_application_dpe	etiquette_dpe	adresse_ban	type_batiment	code_departement_ban	code_insee_ban
-# surface
-# nb de pieces
-
 import psycopg2
 import pandas as pd
 
@@ -28,7 +24,6 @@ SELECT DISTINCT ON (a.id)
     cg.enum_methode_application_dpe_log_id AS methode_application_dpe,
     bc.classe_conso_energie AS etiquette_dpe,
     a.ban_label AS adresse_ban,
-    cg.enum_usage_fonctionnel_batiment_id AS type_batiment,
     a.ban_departement AS code_departement_ban,
     a.ban_citycode AS code_insee_ban
 FROM dpe d
@@ -44,6 +39,6 @@ ORDER BY a.id, d.date_etablissement_dpe DESC;
 df = pd.read_sql(query, conn)
 
 # Export en CSV
-df.to_csv("export_dpe.csv", index=False, sep="|", encoding="utf-8")
+df.to_csv("files/output/export_dpe.csv", index=False, sep="|", encoding="utf-8")
 
 conn.close()

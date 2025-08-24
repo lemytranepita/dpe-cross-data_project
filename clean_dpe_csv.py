@@ -44,11 +44,11 @@ def nettoyer_prefixe_numero(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def nettoyer_dpe(input_file: str, output_file: str, sep: str = ";"):
-    """Nettoie les colonnes adresse/numero/nom_rue dans le DPE."""
+    """Nettoie les colonnes adresse/numero/nom_rue dans le DPE et garde le plus récent par numero_dpe."""
     df = pd.read_csv(input_file, sep=sep, dtype=str, low_memory=False)
 
     # Normaliser colonnes si absentes
-    for col in ["adresse_ban", "numero_voie_ban", "nom_rue_ban"]:
+    for col in ["adresse_ban", "numero_voie_ban", "nom_rue_ban", "numero_dpe", "date_dpe"]:
         if col not in df.columns:
             df[col] = ""
 
@@ -68,6 +68,13 @@ def nettoyer_dpe(input_file: str, output_file: str, sep: str = ";"):
 
     # Supprimer numero en doublon au début de la rue
     df = nettoyer_prefixe_numero(df)
+
+    # Garder le DPE le plus récent par numero_dpe
+    if "numero_dpe" in df.columns and "date_dpe" in df.columns:
+        # convertir date en datetime pour comparaison
+        df["date_dpe"] = pd.to_datetime(df["date_dpe"], errors="coerce")
+        df = df.sort_values("date_dpe", ascending=False)  # plus récent en premier
+        df = df.drop_duplicates(subset=["numero_dpe"], keep="first")  # garder le plus récent
 
     # Sauvegarde
     df.to_csv(output_file, index=False, sep=sep)

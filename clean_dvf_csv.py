@@ -62,7 +62,7 @@ def nettoyer_dvf(input_file, output_file):
     )
     
     # Sauvegarde en CSV avec séparateur ","
-    df_filtre.to_csv(output_file, index=False, sep=",")
+    df_filtre.to_csv(output_file, index=False, sep="|")
     print(f"✅ Fichier nettoyé sauvegardé : {output_file} ({len(df_filtre)} lignes)")
 
 nettoyer_dvf("files/output/dvf.csv", "files/output/dvf_filtered.csv")
