@@ -10,9 +10,9 @@ install:
 	python -m venv venv; 					\
 	. venv/bin/activate; 					\
 	python -m pip install --upgrade pip;	\
-	pip install psycopg2;					\
+	pip install psycopg2 pandas unidecode scipy seaborn matplotlib;					\
 	deactivate;								\
 	)
 
 clean:
-	rm -rf venv
+	rm -rf venv files correlation nettoyage
