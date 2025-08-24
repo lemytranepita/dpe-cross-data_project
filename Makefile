@@ -1,15 +1,14 @@
 all:
 	( \
 	. venv/bin/activate; 					\
-	python main_batch.py;					\
-	deactivate;								\
-	)
-
-test:
-	( \
-	. venv/bin/activate; 					\
 	./dl_dvf.sh;							\
 	python clean_dvf_csv.py;				\
+	python dpe_sql_to_csv.py;				\
+	python clean_dpe_csv.py;				\
+	python correlation_sans_id.py;		    \
+	python analyse_fichier_merge.py;		\
+	python modelisation_predictive.py;		\
+	deactivate;								\
 	)
 
 install:
@@ -22,4 +21,4 @@ install:
 	)
 
 clean:
-	rm -rf venv files correlation nettoyage
+	rm -rf venv files correlation nettoyage catboost_info correlation
