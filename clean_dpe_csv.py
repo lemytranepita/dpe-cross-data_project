@@ -74,4 +74,4 @@ def nettoyer_dpe(input_file: str, output_file: str, sep: str = ";"):
     print(f"✅ Fichier DPE nettoyé sauvegardé : {output_file} ({len(df)} lignes)")
 
 # Exemple d'utilisation
-nettoyer_dpe("ressources/dpe/dpe03existant.csv", "nettoyage/dpe_clean.csv", sep=",")
+nettoyer_dpe("files/output/export_dpe.csv", "files/output/export_dpe_filtered.csv", sep="|")

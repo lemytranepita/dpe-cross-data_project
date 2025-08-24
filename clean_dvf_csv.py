@@ -1,7 +1,7 @@
 import pandas as pd
 from constants import expand_type_de_voie_column, _normalize_abbr, detect_type_in_voie
 
-def nettoyer_dvf(input_file, output_file, max_rows=10000):
+def nettoyer_dvf(input_file, output_file):
     # Lecture avec séparateur pipe
     df = pd.read_csv(input_file, sep="|", dtype=str, low_memory=False)
     
@@ -60,17 +60,9 @@ def nettoyer_dvf(input_file, output_file, max_rows=10000):
         .str.replace("-", " ", regex=False)
         .str.replace("'", " ", regex=False)
     )
-
-    # Limiter à max_rows lignes
-    df_filtre = df_filtre.head(max_rows)
     
     # Sauvegarde en CSV avec séparateur ","
     df_filtre.to_csv(output_file, index=False, sep=",")
     print(f"✅ Fichier nettoyé sauvegardé : {output_file} ({len(df_filtre)} lignes)")
 
-# Exemple d'utilisation
-chemin_dvf = "ressources/dvf/"
-chemin_sauvegarde = "nettoyage/"
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2023.csv", chemin_sauvegarde + "dvf_filtre_2023.csv", 1000000)
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2022.csv", chemin_sauvegarde + "dvf_filtre_2022.csv", 1000000)
-nettoyer_dvf(chemin_dvf + "ValeursFoncieres-2024.csv", chemin_sauvegarde + "dvf_filtre_2024.csv", 1000000)
+nettoyer_dvf("files/output/dvf.csv", "files/output/dvf_filtered.csv")

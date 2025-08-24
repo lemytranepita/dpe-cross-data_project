@@ -5,6 +5,13 @@ all:
 	deactivate;								\
 	)
 
+test:
+	( \
+	. venv/bin/activate; 					\
+	./dl_dvf.sh;							\
+	python clean_dvf_csv.py;				\
+	)
+
 install:
 	( \
 	python -m venv venv; 					\

@@ -18,7 +18,7 @@ mv files/raw/ValeursFoncieres-2022.txt files/raw/dvf_2022.csv
 
 echo "***DVF files downloaded successfully!***"
 
-echo "***Filtering DVF files***"
+echo "***Merging DVF files...***"
 
 # CSV header
 head -n 1 files/raw/dvf_2024.csv > files/output/dvf.csv
@@ -26,3 +26,5 @@ head -n 1 files/raw/dvf_2024.csv > files/output/dvf.csv
 tail -n +2 files/raw/dvf_2024.csv >> files/output/dvf.csv
 tail -n +2 files/raw/dvf_2023.csv >> files/output/dvf.csv
 tail -n +2 files/raw/dvf_2022.csv >> files/output/dvf.csv
+
+echo "***DVF files merged!***"

@@ -107,7 +107,7 @@ with open('DVF_DPE_matches2.csv', 'w', newline='', encoding='utf-8', buffering=1
 
             code_postal = format_postcode(row['Code postal'])
             numero_de_voie = row['No voie']
-            nom_de_voie = remove_accents(row['Voie'].replace("'", ""))
+            nom_de_voie = remove_accents(row['Voie'].replace("'", " "))
             ville = row['Commune']
             code_departement = row['Code departement']
             type_de_voie = row['Type de voie']
