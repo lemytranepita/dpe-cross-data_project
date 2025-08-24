@@ -62,4 +62,4 @@ make clean
 `jupyter notebook`
 
 # Download in virtual environment
-`python3 -m pip install pandas unidecode`
+`python3 -m pip install pandas unidecode scipy seaborn matplotlib`
