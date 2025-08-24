@@ -17,7 +17,7 @@ install:
 	python -m venv venv; 					\
 	. venv/bin/activate; 					\
 	python -m pip install --upgrade pip;	\
-	pip install psycopg2 pandas unidecode scipy seaborn matplotlib;					\
+	pip install psycopg2 pandas unidecode scipy seaborn matplotlib catboost scikit-learn;					\
 	deactivate;								\
 	)
 

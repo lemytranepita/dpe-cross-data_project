@@ -25,7 +25,8 @@ SELECT DISTINCT ON (a.id)
     bc.classe_conso_energie AS etiquette_dpe,
     a.ban_label AS adresse_ban,
     a.ban_departement AS code_departement_ban,
-    a.ban_citycode AS code_insee_ban
+    a.ban_citycode AS code_insee_ban,
+    cg.annee_construction
 FROM dpe d
 JOIN dpe_administratif da ON da.dpe_id = d.id
 JOIN dpe_geolocalisation g ON g.administratif_id = da.dpe_id
