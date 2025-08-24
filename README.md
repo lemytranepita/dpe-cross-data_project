@@ -31,11 +31,15 @@ psql -U postgres -d dpe -f dump_dpev2_prod_fdld.sql # This will take up to a few
 
 ### Installing the virtual environment
 
+This command installs 
+
 ```sh
 make install
 ```
 
 ### Launch program
+
+This command will launch 
 
 ```sh
 make
