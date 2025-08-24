@@ -6,7 +6,6 @@ all:
 	python dpe_sql_to_csv.py;				\
 	python clean_dpe_csv.py;				\
 	python correlation_sans_id.py;		    \
-	python analyse_fichier_merge.py;		\
 	python modelisation_predictive.py;		\
 	deactivate;								\
 	)

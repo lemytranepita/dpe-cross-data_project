@@ -107,16 +107,6 @@ plt.ylim(0, 1200000)
 plt.savefig("correlation/boxplot_valeur_vs_dpe.png", dpi=300)
 plt.close()
 
-# Scatter
-plt.figure(figsize=(10,6))
-plt.scatter(df_merge["score_dpe"], df_merge["valeur_fonciere"], alpha=0.3)
-plt.title("Corrélation Score DPE vs Valeur foncière")
-plt.xlabel("Score DPE (A=1, G=7)")
-plt.ylabel("Valeur foncière (€)")
-plt.xticks(range(1, len("ABCDEFG")+1), list("ABCDEFG"))
-plt.savefig("correlation/scatter_valeur_vs_dpe.png", dpi=300)
-plt.close()
-
 # Moyenne par DPE
 plt.figure(figsize=(10,6))
 df_merge.groupby("etiquette_dpe")["valeur_fonciere"].mean().reindex(list("ABCDEFG")).plot(kind="bar")
